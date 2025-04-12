@@ -2,7 +2,7 @@
 
 **Author:** Gio  
 **Type:** Python CLI Tool  
-**Status:** Stable Release (`v1.0`)  
+**Status:** Stable Release (`v1.1`)  
 **License:** MIT  
 
 ---
