@@ -85,7 +85,7 @@ def calculate_idle_time(deliveries):
             idle_minutes = 0
 
         total_idle += idle_minutes
-        print(f"\nBetwwen delivery #{i} and #{i+1}: {round(idle_minutes, 1)}min")
+        print(f"\nBetween delivery #{i} and #{i+1}: {round(idle_minutes, 1)} min")
 
         avg_idle = total_idle / (len(deliveries) - 1)
         print(f"\nTotal idle Time : {round(total_idle, 1)} minutes")
