@@ -1,4 +1,4 @@
-# 🚗 DashTrack (v1.0)
+# 🚗 DashTrack (v1.1)
 
 **Author:** Gio  
 **Type:** Python CLI Tool  
@@ -97,4 +97,54 @@ Edit
 ```bash
 git add .
 git commit -m "Release v1.0 — DashTrack CLI tool complete"
+git push
+
+## 🚀 DashTrack v1.1 – CLI Delivery Tracker
+
+A command-line tool to help gig drivers log and analyze delivery sessions with zone tracking, tips, mileage, and CSV export.
+
+---
+
+### ✅ What’s New in v1.1
+- **Append Mode:** Automatically appends new deliveries to today's `.csv` file instead of overwriting
+- **Header Check:** Adds headers only if the file doesn’t exist
+- **Same-day Logging Support:** Allows multiple runs during the same day
+
+---
+
+### 🔧 Features
+- Zone selection with multi-delivery logging
+- Calculates tips, CPM, duration, totals
+- Daily `.csv` log generation with clean formatting
+- Load previous logs and filter by date
+- Shows per-zone delivery summary
+
+---
+
+### 📂 Example Output File: `deliveries_2025-04-12.csv`
+```csv
+zone,miles,payment,tip,cpm,start,end,duration,notes
+Valencia,4.5,12.75,3.25,2.83,9:00 AM,9:25 AM,25,Starbucks
+...
+🔄 Coming Soon (Future Versions)
+SQLite database logging
+
+GUI (Tkinter/PyQT)
+
+Earnings analytics dashboard
+
+yaml
+Copy
+Edit
+
+Copy/paste that into your `README.md`, and feel free to tweak the wording however you want.
+
+---
+
+## ✅ 3. Push Your Changes to GitHub
+
+If you're inside VS Code:
+```bash
+git add .
+git commit -m "🚀 v1.1 - Added append mode + file header check"
 git push

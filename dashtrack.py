@@ -1,8 +1,9 @@
-# DashTrack v1.0
+# DashTrack v1.1
 # Author: Gio
 # Type: CLI delivery tracker
 # Features: Logs delivery data, calculates earnings/tips, supports zone breakdowns, saves/loads CSV, filters by date
 
+import os
 import csv
 from datetime import datetime
 
@@ -103,7 +104,7 @@ def zone_summary(deliveries):
     for zone, stats in zone_data.items():
         print(f"{zone}: {stats['count']} deliveries - ${round(stats['earnings'], 2)} earned - {round(stats['miles'], 1)} miles")
 
-def save_deliveries_to_csv(deliveries):
+def save_deliveries_to_csv(deliveries, filename="deliveries_log.csv"):
     if not deliveries:
         print("No deliveries to save.")
         return
@@ -111,11 +112,13 @@ def save_deliveries_to_csv(deliveries):
     date_str = datetime.now().strftime("%Y-%m-%d")
     filename = f"deliveries_{date_str}.csv"
     fieldnames = ["zone", "miles", "payment", "tip", "cpm", "start", "end", "duration", "notes"]
+    file_exists = os.path.exists(filename)
 
     try:
-        with open(filename, mode='w', newline='', encoding='utf-8') as csvfile:
+        with open(filename, mode='a', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
+            if not file_exists:
+                writer.writeheader()
             for delivery in deliveries:
                 writer.writerow(delivery)
         print(f"\nDeliveries saved to {filename}")
@@ -176,7 +179,6 @@ log_multiple_deliveries(zones)
 print_summary(deliveries)
 final_totals()
 zone_summary(deliveries)
-
 load_file = input("\nLoad a previous file to review? (y/n): ").strip().lower()
 if load_file == "y":
     filename = input("Enter the filename (ex: deliveries_2025-04-11.csv): ").strip()
