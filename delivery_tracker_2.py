@@ -1,8 +1,9 @@
-# Baby Delivery Tracker v0.1.2
+# Baby Delivery Tracker v0.1.3
 #author: Gio
 #Features: Zone logging, time tracking, tips, earnings, average cost per mile
+#Now includes: Save to CSV with headers for export/logging
 
-
+import csv
 from datetime import datetime
 
 print("Welcome to the Delivery Tracker!")
@@ -91,13 +92,33 @@ def final_totals ():
     print(f"Total Tips Earned: ${round(total_tips, 2)}")
     print(f"Average Earnings per Mile: ${round(total_earnings / total_miles, 2)}")
 
+def save_deliveries_to_csv(deliveries, filename="deliveries_log.csv"):
+    if not deliveries:
+        print("No Deliveries to save.")
+        return
+    fieldnames = ["zone","miles","payment","tip","cpm","start","end","duration","notes"]
+
+    try:
+        with open(filename, mode='w', newline='',encoding='utf-8')as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            for delivery in deliveries:
+                writer.writerow(delivery)
+        print(f"\n Deliveries saved to {filename}")
+    except Exception as e:
+        print(f"Error Saving to file: {e}")
+
 #---Main Program Flow ---
 zones = log_zones()
 log_multiple_deliveries(zones)
 print_summary(deliveries)  
 final_totals()
+save_deliveries_to_csv(deliveries)
 
 # Optional cleanup for next run
 total_miles = 0
 total_earnings = 0
 total_tips = 0
+
+# v0.1.3 - Save delivery data to file (CSV or JSON)
+

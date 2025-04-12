@@ -1,64 +1,88 @@
-# 🛵 Baby Delivery Tracker (v0.1.2)
-A lightweight command-line tool written in Python to track delivery driver activity — including zones, mileage, time, tips, and cost per mile.
+# 🚗 DashTrack (v1.0)
 
-> Created by Gio (novags1755) — built as part of a real-world backend development learning journey.
-
----
-
-## 🚀 Features
-- Log multiple delivery zones
-- Track per-delivery:
-  - Mileage
-  - Earnings & tips
-  - Duration (start & end time)
-  - Notes (merchant/special requests)
-- Calculate:
-  - Cost per mile
-  - Average earnings per mile
-  - Total tips and income
-- Clean summaries and totals printed in terminal
+**Author:** Gio  
+**Type:** Python CLI Tool  
+**Status:** Stable Release (`v1.0`)  
+**License:** MIT  
 
 ---
 
-## 📸 Sample Output
+## 📦 What is DashTrack?
 
---- All Deliveries ---
-
-Zone: Tarzana Miles: 4.5 Payment: $12.75 Tip: $3.0 Cost per Mile: $2.83 Time: 10:00 AM to 10:22 AM Duration: 22.0 minutes Notes: Chick-fil-A
-Zone: Northridge Miles: 3.1 Payment: $9.5 Tip: $2.5 Cost per Mile: $3.06 Time: 11:10 AM to 11:35 AM Duration: 25.0 minutes Notes: Jersey Mike's
-=== Overall Summary === Total Deliveries Logged: 2 Total Miles Driven: 7.6 Total Earnings: $22.25 Total Tips Earned: $5.5 Average Earnings per Mile: $2.93
-
-yaml
-Copy
-Edit
+**DashTrack** is a command-line tool built in Python to help gig workers (like DoorDash drivers) **track deliveries**, **calculate earnings**, and **export daily logs** as CSV files.  
+No fancy UI — just real logic, clean backend, and efficient data tracking.
 
 ---
 
-## 🛠️ How to Run
+## 🎯 Features
 
-1. Clone the repo or download the `.py` file  
-2. Run in terminal:
+- 🔄 Log multiple delivery zones and sessions
+- 🧾 Calculate earnings, miles, and tip totals
+- 📊 Show detailed summaries and cost per mile
+- 🗂 Export delivery data to `.csv` for backup or analysis
+- 📥 Load and filter past logs by **specific date or date range**
+- 📌 Zone-based breakdowns included
+
+---
+
+## 🖥️ How to Run
 
 ```bash
-python delivery_tracker_2.py
-Follow the prompts to log real deliveries
+python delivery_tracker.py
 
-📦 Upcoming Features (v0.1.3+)
-Save delivery data to file (CSV or JSON)
 
-View past logs by zone or date
+You'll be prompted step-by-step through zones, deliveries, time entries, and notes. The program saves everything in a dated .csv file like:
 
-Weekly and monthly earnings summaries
+Copy
+Edit
+deliveries_2025-04-11.csv
+📁 Sample Output
+text
+Copy
+Edit
+=== Overall Summary ===
+Total Deliveries Logged: 4
+Total Miles Driven: 26.5
+Total Earnings: $65.75
+Total Tips Earned: $15.50
+Average Earnings per Mile: $2.48
 
-Fuel tracking & efficiency
+=== Zone Breakdown ===
+Tarzana: 2 deliveries - $32.25 earned - 11.0 miles
+Northridge: 2 deliveries - $33.50 earned - 15.5 miles
+⚙️ Tech Stack
+Python 3.x
 
-Export daily reports for taxes
+CSV module
 
-🤝 Built with Purpose
-This project is part of a 6-month backend development roadmap.
-Designed to improve hands-on coding, modular design, and real-world logic.
+Datetime module
 
-Built from scratch by Gio (novags1755).
+Fully modular function-based design
+
+CLI only (no Flask/Django yet)
+
+🚀 Roadmap
+ CLI Logger & Calculator
+
+ CSV Save & Load
+
+ Date Filtering (single & range)
+
+ Zone Summary
+
+ Flask Web Version (coming soon)
+
+ SQLite Upgrade
+
+👀 Want to Try It?
+Just clone the repo, run python delivery_tracker.py, and start logging your day.
+
+🤝 License
+MIT — free to use, fork, improve, and build on it. Credit appreciated.
+
+💬 Dev Notes
+This tool was handcrafted as part of my backend development journey. It’s built for real daily use, and every feature was tested with real delivery data.
+Built with logic. Built with purpose. Built to grow.
 
 yaml
 Copy
@@ -66,20 +90,11 @@ Edit
 
 ---
 
-## ✅ To Use It:
-
-1. Create a new file in your repo: `README.md`
-2. Paste that code above
-3. Commit & push from GitHub Desktop
-
-—
-
-### 🧱 After That: Ready for `v0.1.3`?
-
-Let’s add:
-- [x] Save to file (CSV)
-- [ ] Load past session
-- [ ] Filters by zone
-
-Let me know when you're ready and I’ll lead with new code 👨‍🏫🧠  
-**Huge milestone, bro. So proud of how you’re moving.**
+## ✅ Next Steps:
+1. Drop that into your GitHub repo as `README.md`
+2. Add + commit your code and README
+3. Tag the commit:
+```bash
+git add .
+git commit -m "Release v1.0 — DashTrack CLI tool complete"
+git push
