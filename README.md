@@ -1,9 +1,8 @@
-# 🚗 DashTrack (v1.1)
+# 🚗 DashTrack (v1.12)
 
 **Author:** Gio  
 **Type:** Python CLI Tool  
-**Status:** Stable Release (`v1.1`)  
-**License:** MIT  
+**Status:** Stable Release (`v1.1git **License:** MIT  
 
 ---
 
@@ -15,6 +14,10 @@ No fancy UI — just real logic, clean backend, and efficient data tracking.
 ---
 
 ## 🎯 Features
+### 🔍 New in v1.12
+
+- 🕒 **Zone Performance by Time of Day**  
+  Analyze which zones perform better in Morning, Afternoon, Evening, or Late Night sessions. Get delivery counts, mileage, earnings, and average pay per delivery broken down by time block.
 
 - 🔄 Log multiple delivery zones and sessions
 - 🧾 Calculate earnings, miles, and tip totals

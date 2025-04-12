@@ -1,4 +1,4 @@
-# DashTrack v1.1
+# DashTrack v1.11
 # Author: Gio
 # Type: CLI delivery tracker
 # Features: Logs delivery data, calculates earnings/tips, supports zone breakdowns, saves/loads CSV, filters by date
@@ -67,6 +67,30 @@ def log_multiple_deliveries(zones):
         total_miles += delivery["miles"]
         total_earnings += delivery["payment"]
         total_tips += delivery["tip"]
+
+def calculate_idle_time(deliveries):
+    if len(deliveries) < 2:
+        print("\nNot enough deliveries to calculate idle time")
+        return
+    
+    total_idle = 0
+    print("\n---Idle Time Between Deliveries---")
+    for i in range(1,len(deliveries)):
+        prev_end = datetime.strptime(deliveries[i-1]["end"], "%I:%M %p")
+        curr_start = datetime.strptime(deliveries[i]["start"], "%I:%M %p")
+        idle_minutes = (curr_start - prev_end).total_seconds() / 60
+
+        if idle_minutes < 0:
+            print(f"Warning: Overlapping times between delivery #{i} and #{i+1}")
+            idle_minutes = 0
+
+        total_idle += idle_minutes
+        print(f"\nBetwwen delivery #{i} and #{i+1}: {round(idle_minutes, 1)}min")
+
+        avg_idle = total_idle / (len(deliveries) - 1)
+        print(f"\nTotal idle Time : {round(total_idle, 1)} minutes")
+        print(f"\nAverage Idle Time: {round(avg_idle, 1)} minutes")
+
 
 def print_summary(deliveries):  
     print("\n--- All Deliveries ---")
@@ -173,12 +197,54 @@ def filter_deliveries_by_date(deliveries):
         print("Invalid option. Showing all deliveries.")
         return deliveries
 
+def zone_performance_by_time(deliveries):
+    if not deliveries:
+        print("\nNo deliveries to analyze for zone/time performance.")
+        return
+
+    def get_time_period(start_str):
+        dt = datetime.strptime(start_str, "%I:%M %p")
+        hour = dt.hour
+        if 5 <= hour < 12:
+            return "Morning"
+        elif 12 <= hour < 17:
+            return "Afternoon"
+        elif 17 <= hour < 22:
+            return "Evening"
+        else:
+            return "Late Night"
+
+    performance = {}
+
+    for d in deliveries:
+        zone = d["zone"]
+        time_period = get_time_period(d["start"])
+
+        key = (zone, time_period)
+        if key not in performance:
+            performance[key] = {
+                "count": 0,
+                "earnings": 0,
+                "miles": 0
+            }
+        performance[key]["count"] += 1
+        performance[key]["earnings"] += d["payment"]
+        performance[key]["miles"] += d["miles"]
+
+    print("\n=== Zone Performance by Time of Day ===")
+    for (zone, period), stats in performance.items():
+        avg_payment = stats["earnings"] / stats["count"]
+        print(f"{zone} | {period}: {stats['count']} deliveries - ${round(stats['earnings'], 2)} earned - "
+              f"{round(stats['miles'], 1)} miles - Avg ${round(avg_payment, 2)} per delivery")
+
+    
 #--- Main Flow ---
 zones = log_zones()
 log_multiple_deliveries(zones)
 print_summary(deliveries)
 final_totals()
 zone_summary(deliveries)
+zone_performance_by_time(deliveries)
 load_file = input("\nLoad a previous file to review? (y/n): ").strip().lower()
 if load_file == "y":
     filename = input("Enter the filename (ex: deliveries_2025-04-11.csv): ").strip()
@@ -190,12 +256,18 @@ if load_file == "y":
             if filtered:
                 print_summary(filtered)
                 zone_summary(filtered)
+                calculate_idle_time(filtered)
+                zone_performance_by_time(filtered)
+
             else:
                 print("No deliveries found for that date or range.")
         else:
             print_summary(previous_deliveries)
             zone_summary(previous_deliveries)
+            calculate_idle_time(previous_deliveries)
+            zone_performance_by_time(previous_deliveries)
 
+calculate_idle_time(deliveries)
 save_deliveries_to_csv(deliveries)
 
 # Reset totals
