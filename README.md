@@ -1,49 +1,64 @@
-# DashTrack
+# DashTrack 🛵📊
 
-DashTrack is a command-line delivery tracking app for gig drivers (like DoorDash, Uber Eats, etc.), created by **Gio** as a real-world Python project for personal use and portfolio building.
+**DashTrack** is a CLI-based delivery tracking tool built by Gio to track DoorDash sessions and analyze delivery performance. This tool helps independent drivers log key session data, calculate earnings, track idle time, and estimate Prop 22 adjustments (for CA drivers). Now fully refactored and database-powered with SQLite!
 
 ---
 
 ## 🚀 Features
 
-- Log multiple deliveries per session
-- Breakdown earnings by zone
-- Track idle time between deliveries
-- Analyze zone performance by time of day
-- Estimate Prop 22 wage adjustments (CA)
-- Calculate gas expenses based on your MPG
-- Save/load deliveries from SQLite database
-- Optional CSV load (legacy support)
-- Filter by date
-- Fully modular, clean, and refactored
+- Log delivery details (zone, miles, time, pay, tips)
+- View zone performance by time of day
+- Calculate idle time between deliveries
+- Estimate **Prop 22** wage adjustments (California only)
+- Save & load deliveries from a **SQLite database**
+- Optional CSV loading for backward compatibility
+- Daily session report with gas usage & MPG input
+- Full **error handling** for user inputs
 
 ---
 
-## 📸 Screenshot
+## 📂 Database Schema (SQLite)
 
-> CLI output includes delivery breakdown, idle time report, zone summaries, and Prop 22 analysis.
-
----
-
-## 🧠 Tech Stack
-
-- Python 3
-- SQLite3 (via built-in `sqlite3` module)
-- CSV for optional legacy loading
-- No third-party packages required
+- `zones` table (id, name)
+- `deliveries` table (zone_id FK, miles, payment, tip, cpm, start_time, end_time, duration, notes)
 
 ---
 
-## 📝 License
+## 🔧 Installation
 
-MIT License  
-© 2025 Gio Suarez
+```bash
+git clone https://github.com/novags1755/delivery-tracker.git
+cd delivery-tracker
+python dashtrack.py
+Ensure you have Python 3.9+ and sqlite3 installed (comes by default).
 
-This project is licensed under the [MIT License](LICENSE).
+🛠 Usage
+Start the script:
 
----
+bash
+Copy
+Edit
+python dashtrack.py
+Choose to load past data or log new deliveries
 
-## 🔗 Repo
+Enter zone names, delivery details, and session stats
 
-[GitHub Repo](https://github.com/novags1755/delivery-tracker)
+View summaries, breakdowns, and optionally generate a Prop 22 + Gas report
 
+🧪 Sample Output
+text
+Copy
+Edit
+Zone: Northridge
+Miles: 5.4
+Payment: $12.50
+Tip: $2.50
+Cost per Mile: $2.31
+Time: 6:45 AM to 7:05 AM
+Duration: 20.0 minutes
+📜 License
+This project is licensed under the MIT License.
+
+✨ Author
+Built by Gio aka novags1755 as part of his backend development journey.
+Follow the journey & projects: github.com/novags1755
