@@ -1,0 +1,63 @@
+<!-- templates/index.html -->
+<!--
+Homepage template for GigDash.
+- Displays the delivery input form (zone, pay, tip).
+- Submits form data to the Flask backend for saving.
+-->
+
+<!Doctype html>
+<html lang="en">
+    <head>
+        <meta chartset="UTF-8">
+        <title>Welcome to GigDash!</title>
+    </head>
+    <body>
+        <h1>Welcome to GigDash!</h1>
+        <p>Track your gig economy with style!</p>
+
+
+    <form action="/submit_delivery" method="POST">
+        <label for ="zone">Zone:</label><br>
+        <input type ="text" id="zone" name="zone"><br><br>
+
+        <label for="pay">Pay ($):</label><br>
+        <input type="text" id="pay" name="pay"><br><br>
+
+        <label  for="Tip">Tip($):</label><br>
+        <input type="text" id="tip" name="tip"><br><br>
+        
+        <label for="mileage">Mileage Driven:</label>
+        <input type="text" id="mileage" name="mileage"><br><br>
+
+        <label for="state">State:</label>
+        <select id="state" name="state">
+            <option value="CA">California</option>
+            <option value="NY">New York</option>
+            <option value="TX">Texas</option>
+        
+        </select><br><br>
+          
+
+        <button type="submit">Submit Delivery</button>
+
+    </form>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div style="background-color: #d4edda; color: #155724; padding: 10px; margin-top: 15px; border: 1px solid #c3e6cb; border-radius: 5px;">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <hr>
+        <p>
+            <a href="/deliveries">All Deliveries</a> |
+            <a href="/zones">Zone Performance</a> |
+            <a href="/idle">Idle Time Report</a> |
+            <a href="/weekly_report">Weekly Report</a> |
+            <a href="/monthly_report">Monthly Report</a> |
+            <a href="/report">Date Range Report</a>
+        </p>
+        
+    </body>
+</html>

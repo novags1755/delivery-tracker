@@ -1,0 +1,106 @@
+<!--
+deliveries.html
+- Displays all submitted deliveries in a formatted table.
+- Receives the deliveries list from Flask (passed from app.py).
+- Iterates over each delivery record and displays fields: ID, Zone, Pay, Tip, Mileage, and State.
+- Used for the '/deliveries' route to review delivery history.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Deliveries - Gigdash</title>
+</head>
+<body>
+    <h1>All Deliveries</h1>
+    <p>
+        <a href="/">Back To Home (New Delivery)</a> |
+        <a href="/deliveries">All Deliveries</a> |
+        <a href="/weekly_report">Weekly Report</a> |
+        <a href="/report">Date Range Report</a>
+        <a href="/monthly_report">Monthly Report</a>
+        
+    </p>
+    
+
+
+    <div style="width: 80%; margin:auto;">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border: 1px solid #c3e6cb; border-radius: 5px;">
+                {{ messages[0] }}
+
+            </div>
+        {% endif %}
+        {% endwith %}
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Zone</th>
+                <th>Pay</th>
+                <th>Tip</th>
+                <th>Mileage</th>
+                <th>State</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for delivery in deliveries %}
+                <tr>
+                    <td>{{ delivery.id }}</td>
+                    <td>{{ delivery.zone }}</td>
+                    <td>{{ delivery.pay }}</td>
+                    <td>{{ delivery.tip }}</td>
+                    <td>{{ delivery.mileage }}</td>
+                    <td>{{ delivery.state }}</td>
+                    <td>
+                        <form method="post" action="/delete_delivery/{{ delivery.id }}" onsubmit="return confirm('Delete delivery');">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <h2>Totals</h2>
+    <ul>
+        <li>Total Earnings: $ {{totals[0] or 0 }}</li>
+        <li>Total tips: $ {{totals [1] or 0 }}</li>
+        <li>Total Mileage: {{totals [2] or 0 }}</li>
+    </ul>
+    <hr>
+    <h2>Prop 22 & Gas Summary</h2>
+    <hr>
+    <h2>Session Summary</h2>
+
+    <ul style="line-height: 1.8;">
+        <li><strong>Estimated Gast Cost:</strong> ${{  gas_cost or 0 }}</li>
+        <li><strong>Prop 22 Adjustment:</strong> ${{ prop22 or 0}}</li>
+        <li><strong>Estimated Net Earnings (after gas):</strong>
+            {% if totals and totals[0] is not none and gas_cost is not none %}
+    ${{ "%.2f"|format(totals[0] - gas_cost) }}
+{% else %}
+    $0.00
+{% endif %}
+
+        </li>
+        
+    </ul>
+
+    <form method="get" action="/deliveries">
+        <label for="mpg">Your MPG:</label>
+        <input type="number" name="mpg" step="0.1" value="{{mpg}}" required>
+
+        <label for="Gas">Gas price ($/gal)</label>
+        <input type="number" name="gas" step="0.01" value="{{gas_price}}" required>
+
+        <button type="submit">Recalculate</button>
+    </form>
+    <ul>
+        <li>Estimated Prop22 Adjusment: ${{ prop22 }}</li>
+        <li>Estimated Gas Cost: $ {{gas_cost}}</li>
+    </ul>
+    </div>
+</body>

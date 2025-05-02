@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Idle Time Report - GigDash</title>
+</head>
+<body>
+    <h1>⏱️ Idle Time Between Deliveries</h1>
+
+    <p>
+        <a href="/">New Delivery</a> |
+        <a href="/deliveries">All Deliveries</a> |
+        <a href="/zones">Zone Performance</a> |
+        <a href="/weekly_report">Weekly Report</a> |
+        <a href="/monthly_report">Monthly Report</a> |
+        <a href="/report">Date Range Report</a>
+    </p>
+
+    {% if report.idle_times %}
+        <p><strong>Average Idle Time:</strong> {{ report.average_idle }} minutes</p>
+
+        <table border="1" cellpadding="6" style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Delivery #</th>
+                    <th>Idle Time (minutes)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for idle in report.idle_times %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ idle }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No idle time data available yet — log more than one delivery to calculate it.</p>
+    {% endif %}
+</body>
+</html>

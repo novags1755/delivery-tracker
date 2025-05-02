@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monthly Report - Gigdash</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <h1>Monthly Delivery Summary</h1>
+    <p>
+        <a href="/">Back to Home</a> |
+        <a href="/deliveries">All Deliveries</a> |
+        <a href="/weekly_report">Weekly Report</a> |
+        <a href="/report">Date Range Report</a>
+    </p>
+
+    {% if report %}
+        <table border="1" cellpadding="8" style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Total Deliveries</th>
+                    <th>Total Pay</th>
+                    <th>Total Tip</th>
+                    <th>Total Mileage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for month, data in report.items() %}
+                <tr>
+                    <td>{{ month }}</td>
+                    <td>{{ data['deliveries'] }}</td>
+                    <td>${{ "%.2f"|format(data['pay']) }}</td>
+                    <td>${{ "%.2f"|format(data['tip']) }}</td>
+                    <td>{{ "%.2f"|format(data['mileage']) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No Deliveries found to summarize by month.</p>
+    {% endif %}
+
+    <hr>
+<h2>📊 Monthly Insights</h2>
+
+<!-- Best month highlight -->
+{% if insights.best_month %}
+    <p><strong>Best Month:</strong> {{ insights.best_month.month }} with ${{ "%.2f"|format(insights.best_month.earnings) }} in earnings.</p>
+{% endif %}
+
+<!-- Comparison table -->
+<table border="1" cellpadding="6" style="margin-top: 10px;">
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th>Total Earnings</th>
+            <th>% Change vs Previous</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in insights.comparison %}
+        <tr>
+            <td>{{ item.month }}</td>
+            <td>${{ "%.2f"|format(item.earnings) }}</td>
+            <td>
+                {% if item.change_vs_prev is not none %}
+                    {% if item.change_vs_prev > 0 %}
+                        <span style="color: green;">+{{ item.change_vs_prev }}%</span>
+                    {% elif item.change_vs_prev < 0 %}
+                        <span style="color: red;">{{ item.change_vs_prev }}%</span>
+                    {% else %}
+                        0%
+                    {% endif %}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    
+        {% else %}
+            <p>No data available for monthly insights.</p>
+        {% endif %}
+
+    <h2>Monthly Earnings Chart</h2>
+    <canvas id="monthlyChart" width="500" height="250"></canvas>
+
+    <script>
+      const labels = [
+        {% for month, data in report.items() %}
+          "{{ month }}",
+        {% endfor %}
+      ];
+
+      const data = {
+        labels: labels,
+        datasets: [{
+          label: 'Total Earnings',
+          data: [
+            {% for month, data in report.items() %}
+              {{ data.pay }},
+            {% endfor %}
+          ],
+          borderColor: 'blue',
+          backgroundColor: 'lightblue',
+          tension: 0.3,
+        }]
+      };
+
+      const config = {
+        type: 'line',
+        data: data,
+        options: {
+          responsive: false,  // Disable auto-resizing to use fixed canvas size
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      };
+
+      new Chart(
+        document.getElementById('monthlyChart'),
+        config
+      );
+    </script>
+</body>
+</html>

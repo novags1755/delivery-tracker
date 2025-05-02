@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weekly Report - Gigdash</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <h1>Weekly Delivery Summary</h1>
+    <p>
+        <a href="/">Back to Home</a> |
+        <a href="/deliveries">All Deliveries</a> |
+        <a href="/monthly_report">Monthly Report</a> |
+        <a href="/report">Date Range Report</a>
+    </p>
+
+    {% if report %}
+        <table border="1" cellpadding="8" style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Week</th>
+                    <th>Total Deliveries</th>
+                    <th>Total Pay</th>
+                    <th>Total Tip</th>
+                    <th>Total Mileage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week, data in report.items() %}
+                <tr>
+                    <td>{{ week }}</td>
+                    <td>{{ data['deliveries'] }}</td>
+                    <td>${{ "%.2f"|format(data['pay']) }}</td>
+                    <td>${{ "%.2f"|format(data['tip']) }}</td>
+                    <td>{{ "%.2f"|format(data['mileage']) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No deliveries found to summarize by week.</p>
+    {% endif %}
+
+    <hr>
+    <h2>📊 Weekly Insights</h2>
+    
+    <!-- Best week highlight -->
+    {% if insights.best_week %}
+        <p><strong>Best Week:</strong> {{ insights.best_week.week }} with ${{ "%.2f"|format(insights.best_week.earnings) }} in earnings.</p>
+    {% endif %}
+    
+    <!-- Comparison table -->
+    <table border="1" cellpadding="6" style="margin-top: 10px;">
+        <thead>
+            <tr>
+                <th>Week</th>
+                <th>Total Earnings</th>
+                <th>% Change vs Previous</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in insights.comparison %}
+            <tr>
+                <td>{{ item.week }}</td>
+                <td>${{ "%.2f"|format(item.earnings) }}</td>
+                <td>
+                    {% if item.change_vs_prev is not none %}
+                        {% if item.change_vs_prev > 0 %}
+                            <span style="color: green;">+{{ item.change_vs_prev }}%</span>
+                        {% elif item.change_vs_prev < 0 %}
+                            <span style="color: red;">{{ item.change_vs_prev }}%</span>
+                        {% else %}
+                            0%
+                        {% endif %}
+                    {% else %}
+                        –
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>    
+    <!-- Weekly Chart Section -->
+    <h2>Weekly Earnings Chart</h2>
+    <canvas id="weeklyChart" width="500" height="250"></canvas>
+
+    <script>
+        const labels = [
+            {% for week, data in report.items() %}
+                "{{ week }}"{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ];
+
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Total Earnings',
+                data: [
+                    {% for week, data in report.items() %}
+                        {{ data.pay | float }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                borderColor: 'green',
+                backgroundColor: 'lightgreen',
+                tension: 0.3,
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: false,  // Make the chart respect the fixed size
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        new Chart(
+            document.getElementById('weeklyChart'),
+            config
+        );
+    </script>
+</body>
+</html>
