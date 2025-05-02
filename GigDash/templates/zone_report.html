@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zone Performance - GigDash</title>
+</head>
+<body>
+    <h1>🚦 Zone Performance Summary</h1>
+    <p>
+        <a href="/">New Delivery</a> |
+        <a href="/deliveries">All Deliveries</a> |
+        <a href="/weekly_report">Weekly Report</a> |
+        <a href="/monthly_report">Monthly Report</a> |
+        <a href="/report">Date Range Report</a>
+    </p>
+
+    {% if best_zone %}
+        <p><strong>💰 Top Zone:</strong> {{ best_zone.zone }} — ${{ "%.2f"|format(best_zone.avg) }} average earnings per delivery</p>
+    {% endif %}
+
+    <table border="1" cellpadding="8" style="margin-top: 15px;">
+        <thead>
+            <tr>
+                <th>Zone</th>
+                <th>Total Deliveries</th>
+                <th>Total Earnings</th>
+                <th>Average per Delivery</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for zone, data in report.items() %}
+            <tr>
+                <td>{{ zone }}</td>
+                <td>{{ data.count }}</td>
+                <td>${{ "%.2f"|format(data.pay) }}</td>
+                <td>${{ "%.2f"|format(data.avg) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

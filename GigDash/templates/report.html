@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GigDash Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Custom Report (By Date Range)</h1>
+
+    <div style="width: 80%; margin: auto;">
+
+        <!-- Navigation -->
+        <p>
+            <a href="/">Back To Home (New Delivery)</a> |
+            <a href="/deliveries">All Deliveries</a> |
+            <a href="/weekly_report">Weekly Report</a> |
+            <a href="/monthly_report">Monthly Report</a> |
+            <a href="/zones">Zone Performance</a> |
+            <a href="/idle">Idle Time Report</a>
+        </p>
+
+        <!-- Date range form -->
+        <form method="POST" style="margin-top: 20px;">
+            <label>Start Date</label>
+            <input type="date" name="start_date" value="{{ start_date }}" required>
+
+            <label>End Date</label>
+            <input type="date" name="end_date" value="{{ end_date }}" required>
+
+            <button type="submit">Generate Report</button>
+        </form>
+
+        {% if report %}
+            <h2 style="margin-top: 30px;">Results from {{ start_date }} to {{ end_date }}</h2>
+
+            <!-- Delivery breakdown table -->
+            <table border="1" cellpadding="8">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Deliveries</th>
+                        <th>Total Pay</th>
+                        <th>Total Tip</th>
+                        <th>Total Miles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for date, data in report.items() %}
+                    <tr>
+                        <td>{{ date }}</td>
+                        <td>{{ data['deliveries'] }}</td>
+                        <td>${{ "%.2f"|format(data['pay']) }}</td>
+                        <td>${{ "%.2f"|format(data['tip']) }}</td>
+                        <td>{{ "%.2f"|format(data['mileage']) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>📈 Daily Earnings Chart</h2>
+            <canvas id="rangeChart" width="500" height="250"></canvas>
+
+            <script>
+                const labels = [
+                    {% for date, data in report.items() %}
+                        "{{ date }}"{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ];
+
+                const earnings = [
+                    {% for date, data in report.items() %}
+                        {{ data.pay | float }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ];
+
+                const data = {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Daily Pay',
+                        data: earnings,
+                        borderColor: 'purple',
+                        backgroundColor: 'rgba(128, 0, 128, 0.2)',
+                        tension: 0.3,
+                    }]
+                };
+
+                const config = {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        responsive: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Earnings ($)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
+                            }
+                        }
+                    }
+                };
+
+                new Chart(
+                    document.getElementById('rangeChart'),
+                    config
+                );
+            </script>
+
+        {% elif start_date %}
+            <p>No data found for this range.</p>
+        {% endif %}
+
+        <hr>
+        <h2>Prop 22 & Gas Summary</h2>
+
+        <ul style="line-height: 1.8;">
+            <li><strong>Estimated Prop22 Adjustment:</strong> ${{ prop22 or 0 }}</li>
+            <li><strong>Estimated Gas Cost:</strong> ${{ gas_cost or 0 }}</li>
+            <li><strong>Estimated Net Earnings (after gas):</strong>
+                {% if totals and totals[0] is not none and gas_cost is not none %}
+                    ${{ "%.2f"|format(totals[0] - gas_cost) }}
+                {% else %}
+                    $0.00
+                {% endif %}
+            </li>
+        </ul>
+
+        <form method="get" action="/report">
+            <input type="hidden" name="start_date" value="{{ start_date }}">
+            <input type="hidden" name="end_date" value="{{ end_date }}">
+
+            <label for="mpg">Your MPG:</label>
+            <input type="number" name="mpg" step="0.1" value="{{ mpg }}" required>
+
+            <label for="gas">Gas Price ($/gal):</label>
+            <input type="number" name="gas" step="0.01" value="{{ gas_price }}" required>
+
+            <button type="submit">Recalculate</button>
+        </form>
+    </div>
+</body>
+</html>
